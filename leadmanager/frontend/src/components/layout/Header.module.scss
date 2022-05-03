@@ -1,0 +1,24 @@
+header {
+    padding: 20px;
+    background-color: #e3f2fd !important;
+}
+
+.nav_link, .btn {
+    color: black !important;
+    transition:transform 0.25s;
+    will-change: transform;
+    &_active {
+        color: white !important;
+        background-color: #1976d2 !important;
+    }
+}
+
+.btn {
+    color: white !important;
+    background-color: #1976d2 !important;
+}
+
+.nav_link:hover,.btn:hover {
+    transform: translateY(-5px);
+}
+
