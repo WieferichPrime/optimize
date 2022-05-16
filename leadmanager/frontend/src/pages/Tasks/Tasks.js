@@ -5,9 +5,10 @@ import { changeTask } from '../../redux/actions';
 
 
 function Tasks() {
-    const [task, setTask] = useState(useSelector( select => select.task));
     const dispatch = useDispatch();
+    const items = ['Распределение однородного ресурса', 'Распределение однородного ресурса (общий случай)', 'Неоднородный ресурс', 'Трёхиндексная функция'];
     
+    const [task, setTask] = useState(Number(useSelector( select => select.task)));
     const dataHandler = useCallback((newData) => {
         dispatch(changeTask(newData));
     }, []);
@@ -21,17 +22,16 @@ function Tasks() {
                 <div className='col-3'></div>
                 <div className='col-6'>
                     <BaseSelect 
-                    items={['Распределение однородного ресурса', 'Распределение однородного ресурса (общий случай)', 'Неоднородный ресурс', 'Трёхиндексная функция']} 
+                    items={items} 
                     label='Задача' 
-                    handleChange={(e) => setTask(e.target.value)}
-                    selected={task}
+                    handleChange={(e) => setTask(items.indexOf(e.target.value))}
                     >
                     </BaseSelect>
                 </div>
                 <div className='col-3'></div>
             </div>
             <div>
-                {task}
+                {items[task] || ''}
             </div>
         </>
      );

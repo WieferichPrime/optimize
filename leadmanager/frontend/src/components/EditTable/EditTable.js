@@ -46,13 +46,20 @@ const editColumnMessages = {
 
 const getRowId = (row) => row.id;
 
-const onSave = (workbook) => {
+let saved = false;
+const onSave = (workbook, name) => {
   workbook.xlsx.writeBuffer().then((buffer) => {
-    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
+    if (!saved) {
+      saved = true;
+      saveAs(
+        new Blob([buffer], { type: "application/octet-stream" }),
+        `${name}.xlsx`
+      );
+    } else saved = false;
   });
- };
+};
 
-const MyTable = ({title, tableName, initRows, initCols}) => {
+const MyTable = ({title, tableName, initRows, initCols, onlyOneRow = false, getNumObjects = () => null}) => {
   const [columns, setColumns] = useState(initCols);
   const [rows, setRows] = useState(initRows);
   const [addedColumn, setAddedColumn] = useState('');
@@ -65,7 +72,7 @@ const MyTable = ({title, tableName, initRows, initCols}) => {
   const [hiddenColumnNames, setHiddenColumnNames] = useState(['id']);
   const [validationStatus, setValidationStatus] = useState({});
   const [validationRules, setValidationRules] = useState({});
-  const exporterRef = useRef();
+  const exporterRef = useRef(null);
 
   useEffect(() => {
     const rules = {};
@@ -89,6 +96,7 @@ const MyTable = ({title, tableName, initRows, initCols}) => {
       rows: rows
     }
     dataHandler(tableData);
+    getNumObjects(columns.length)
   }, [columns, rows])
 
   const number = {
@@ -279,7 +287,7 @@ const MyTable = ({title, tableName, initRows, initCols}) => {
         <TableHeaderRow />
         <TableInlineCellEditing selectTextOnEditStart />
         <TableEditColumn
-          showAddCommand
+          showAddCommand = {!onlyOneRow || rows.length === 0}
           showDeleteCommand
           messages= {editColumnMessages}
         />
@@ -295,7 +303,7 @@ const MyTable = ({title, tableName, initRows, initCols}) => {
       ref={exporterRef}
       columns={columns}
       rows={rows}
-      onSave={onSave}
+      onSave={(param) => onSave(param, title)}
       />
       <div className='d-flex justify-content-end mt-2 mb-2'>
           <Button

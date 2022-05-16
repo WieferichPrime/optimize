@@ -1,3 +1,5 @@
+const sassRegex = /\.(scss|sass|css)$/;
+const sassModuleRegex = /\.module\.(scss|sass)$/;
 module.exports = {
   entry: "./leadmanager/frontend/src/index.js",
   mode: "development",
@@ -14,9 +16,13 @@ module.exports = {
         }
       },
       {
-        test: /\.(sa|sc|c)ss$/,
+        test: sassRegex,
         use: ['style-loader', 'css-loader', 'postcss-loader', "sass-loader"]
-      }
+      },
+      // {
+      //   test: sassModuleRegex,
+      //   use: 'sass-loader',
+      // },
     ]
   }
 };
